@@ -1,0 +1,77 @@
+[
+  {
+    "creationDate": 1550194615527,
+    "description": "",
+    "groupId": "",
+    "id": "Headers_1550194615527",
+    "name": "steemconnect headers",
+    "objectType": "rule",
+    "pairs": [
+      {
+        "header": "content-security-policy",
+        "source": {
+          "key": "host",
+          "operator": "Contains",
+          "value": "steemconnect.com"
+        },
+        "target": "Response",
+        "type": "Modify",
+        "value": "connect-src 'self' *.steemit.com anyx.io *.steemconnect.com;"
+      }
+    ],
+    "ruleType": "Headers",
+    "status": "Active"
+  },
+  {
+    "creationDate": 1550194538053,
+    "description": "",
+    "groupId": "",
+    "id": "Replace_1550194538053",
+    "name": "steem-api-host",
+    "objectType": "rule",
+    "pairs": [
+      {
+        "from": "api.steemit.com",
+        "source": {
+          "key": "Url",
+          "operator": "Contains",
+          "value": ""
+        },
+        "status": "Inactive",
+        "to": "anyx.io"
+      }
+    ],
+    "ruleType": "Replace",
+    "status": "Active",
+    "version": 2
+  },
+  {
+    "creationDate": 1550194486631,
+    "description": "",
+    "groupId": "",
+    "id": "Script_1550194486631",
+    "name": "steem-api-redirect",
+    "objectType": "rule",
+    "pairs": [
+      {
+        "libraries": [],
+        "scripts": [
+          {
+            "codeType": "js",
+            "fileName": "",
+            "loadTime": "beforePageLoad",
+            "type": "code",
+            "value": "    // 修改 API Server\n    var SELECTED_SERVER = \"anyx.io\";\n    var ORIGINAL_SERVER = \"api.steemit.com\";\n\n    // intercept XHR\n    (function() {\n        var origOpen = XMLHttpRequest.prototype.open;\n        XMLHttpRequest.prototype.open = function() {\n            if (arguments[1].indexOf(ORIGINAL_SERVER) != -1) {\n                arguments[1] = arguments[1].replace(ORIGINAL_SERVER, SELECTED_SERVER);\n            }\n            origOpen.apply(this, arguments);\n        };\n    })();"
+          }
+        ],
+        "source": {
+          "key": "host",
+          "operator": "Contains",
+          "value": "busy.org"
+        }
+      }
+    ],
+    "ruleType": "Script",
+    "status": "Active"
+  }
+]
